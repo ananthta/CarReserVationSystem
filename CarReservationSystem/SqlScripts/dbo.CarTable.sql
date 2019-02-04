@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[Car]
+(
+	[Id] INT NOT NULL IDENTITY PRIMARY KEY,
+	[Model] VARCHAR(500) NOT NULL,
+	[Quantity] INT NOT NULL
+)

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CarReservationSystem": {
+      "commandName": "Project",
+      "commandLineArgs": "--u \"Jane Smith\" --e \"jane.smith@gmail.com\" --f 2018-01-02 --t 2018-01-03 --c \"Merecedes Benz\" --x"
+    }
+  }
+}
