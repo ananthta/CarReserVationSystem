@@ -1,16 +1,16 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using NLog;
+using System;
 using System.Text;
-using NLog;
+using System.Data.SqlClient;
 using CarReservationSystem.Models;
 using CarReservationSystem.Services.Interfaces;
 using CarReservationSystem.Repositories.Interfaces;
 
 namespace CarReservationSystem.Services
 {
-    public class CarInfoProvider : ICarInfoProvider
+    public class CarInformationService : ICarInformationService
     {
-        public CarInfoProvider(ICarRepository carRepository)
+        public CarInformationService(ICarRepository carRepository)
         {
             _carRepository = carRepository;
         }

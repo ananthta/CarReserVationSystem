@@ -4,7 +4,7 @@ using CarReservationSystem.Models;
 
 namespace CarReservationSystem.Services.Interfaces
 {
-    public interface ICarInfoProvider
+    public interface ICarInformationService
     {
         Car GetCar(string model);
         bool CarExists(string model);

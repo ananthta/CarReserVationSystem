@@ -22,7 +22,7 @@ namespace CarReservationSystem.Repositories
                                          Status, FromDate, ToDate
                                          FROM [dbo].[Reservations] 
                                   WHERE UserId = @userId AND CarId = @carId
-                                  AND FromDate = @fromDate AND ToDate = @toDate ";
+                                  AND FromDate >= @fromDate AND ToDate <= @toDate ";
 
             using (var connection = new SqlConnection(_connectionString))
             {

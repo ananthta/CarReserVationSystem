@@ -6,9 +6,9 @@ using CarReservationSystem.Repositories.Interfaces;
 
 namespace CarReservationSystem.Services
 {
-    public class UserInfoProvider : IUserInfoProvider
+    public class UserInformationService : IUserInformationService
     {
-        public UserInfoProvider(IUserRepository userRepository)
+        public UserInformationService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }

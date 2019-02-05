@@ -12,7 +12,7 @@ namespace CarReservationSystem.Services
     {
         public ReservationsService
             (
-                ICarInfoProvider carInfoProvider, 
+                ICarInformationService carInfoProvider, 
                 IReservationsRepository reservationsRepository,
                 IConnectionStringProvider connectionStringProvider
             )
@@ -26,7 +26,8 @@ namespace CarReservationSystem.Services
         {
             if (car.Quantity <= 0)
             {
-                Logger.Info("Unable to make reservation as no cars of this model is available.");
+                Logger.Error("Unable to make reservation as no cars of this model are available.");
+                return 0;
             }
 
             using (var connection = new SqlConnection(_connectionString))
@@ -84,8 +85,7 @@ namespace CarReservationSystem.Services
         }
 
         private readonly string _connectionString;
-        private readonly ICarInfoProvider _carInfoProvider;
-
+        private readonly ICarInformationService _carInfoProvider;
         private readonly IReservationsRepository _reservationsRepository;
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
     }

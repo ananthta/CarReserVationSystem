@@ -10,8 +10,8 @@ namespace CarReservationSystem.Services
     {
         public ReservationsRunner
             (
-                ICarInfoProvider carInfoProvider, 
-                IUserInfoProvider userInfoProvider,
+                ICarInformationService carInfoProvider, 
+                IUserInformationService userInfoProvider,
                 IReservationsService reservationsService,
                 IReservationsRepository reservationsRepository
             )
@@ -22,7 +22,7 @@ namespace CarReservationSystem.Services
             _reservationsRepository = reservationsRepository;
         }
 
-        public void Run(ReservationOptions reservationOptions)
+        public int Run(ReservationOptions reservationOptions)
         {
             var user = GetUser(reservationOptions);
             var car = _carInfoProvider.GetCar(reservationOptions.CarModel);
@@ -34,24 +34,27 @@ namespace CarReservationSystem.Services
             {
                 if (existingReservation != null)
                 {
-                    const string errorMessage = " Reservation already exists";
+                    const string errorMessage = " Reservation already exists ";
                     Logger.Error(errorMessage);
                     throw new ArgumentException(errorMessage);
                 }
 
                 var result = _reservationsService.TryReserve(reservationOptions, car, user);
                 Logger.Info(result == 1 ? "Reservation made successfully." : "Unable to make reservation.");
+                return result;
             }
-            else if(reservationOptions.CancelReservation)
+
+            if (!reservationOptions.CancelReservation) return 0;
             {
                 if (existingReservation == null && reservationOptions.CancelReservation)
                 {
-                    const string errorMessage = " Reservation does not exist";
+                    const string errorMessage = " Reservation does not exist ";
                     Logger.Error(errorMessage);
                     throw new ArgumentException(errorMessage);
                 }
                 var result = _reservationsService.TryCancel(existingReservation, car, user);
                 Logger.Info(result == 1 ? "Reservation cancelled successfully." : "Unable to make reservation.");
+                return result;
             }
 
         }
@@ -62,8 +65,8 @@ namespace CarReservationSystem.Services
             return _userInfoProvider.GetUser(userName, reservationOptions.Email);
         }
 
-        private readonly ICarInfoProvider _carInfoProvider;
-        private readonly IUserInfoProvider _userInfoProvider;
+        private readonly ICarInformationService _carInfoProvider;
+        private readonly IUserInformationService _userInfoProvider;
         private readonly IReservationsService _reservationsService;
         private readonly IReservationsRepository _reservationsRepository;
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();

@@ -9,8 +9,8 @@ namespace CarReservationSystem.Services
     {
         public ReservationOptionsValidator
             (
-                ICarInfoProvider carInfoProvider,
-                IUserInfoProvider userInfoProvider
+                ICarInformationService carInfoProvider,
+                IUserInformationService userInfoProvider
             )
         {
             _carInfoProvider    = carInfoProvider;
@@ -25,7 +25,7 @@ namespace CarReservationSystem.Services
 
             if (_carInfoProvider.CarExists(reservationOptions.CarModel)) return;
             var errorMessage =
-                $" Invalid car mode: {reservationOptions.CarModel}, available car models are: . {Environment.NewLine} {_carInfoProvider.GetAllCarModels()}";
+                $" Invalid car model: {reservationOptions.CarModel}, available car models are: . {Environment.NewLine} {_carInfoProvider.GetAllCarModels()}";
             Logger.Error(errorMessage);
             throw new ArgumentException(errorMessage);
         }
@@ -59,14 +59,14 @@ namespace CarReservationSystem.Services
         {
             if (reservationOptions.ToDate > reservationOptions.FromDate) return;
             {
-                var errorMessage = $"{reservationOptions.FromDate} should be less than {reservationOptions.ToDate} ";
+                var errorMessage = $" {reservationOptions.FromDate} should be less than {reservationOptions.ToDate} ";
                 Logger.Error(errorMessage);
                 throw new ArgumentException(errorMessage);
             }
         }
 
-        private readonly ICarInfoProvider _carInfoProvider;
-        private readonly IUserInfoProvider _userInfoProvider;
+        private readonly ICarInformationService _carInfoProvider;
+        private readonly IUserInformationService _userInfoProvider;
         private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
     }
 }
