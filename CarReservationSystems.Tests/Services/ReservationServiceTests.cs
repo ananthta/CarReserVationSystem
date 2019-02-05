@@ -53,7 +53,7 @@ namespace CarReservationSystems.Tests.Services
         }
 
         [Test]
-        public void TryReserve_WithZeroCarQty_ShouldNotBeReserved()
+        public void TryReserve_WithZeroCarQtyAndNoPreviousBookings_ShouldNotBeReserved()
         {
             // Arrange .
             const int carQuantity = 0;
@@ -70,11 +70,42 @@ namespace CarReservationSystems.Tests.Services
                 UserName = $"{user.FirstName} {user.LastName}"
             };
 
+            _reservationsRepository.GetCountOfPreviousReservation(car.CarId, reservationOption.FromDate)
+                .ReturnsForAnyArgs(0);
+
             // Act .
             var result = _target.TryReserve(reservationOption, car, user);
 
             // Assert .
             Assert.That(result == 0);
+        }
+
+        [Test]
+        public void TryReserve_WithZeroCarQtyAndPreviousNonOverLappingBookings_ShouldBeReserved()
+        {
+            // Arrange .
+            const int carQuantity = 0;
+            var car = new Car { CarId = 1, Model = "Camry", Quantity = carQuantity };
+            var user = new User { UserId = 2, Email = "ananth.tatachar@gmail.com", FirstName = "Ananth", LastName = "Tatachar" };
+            var reservationOption = new ReservationOptions
+            {
+                NewReservation = true,
+                CancelReservation = false,
+                CarModel = car.Model,
+                Email = user.Email,
+                FromDate = new DateTime(2018, 01, 01),
+                ToDate = new DateTime(2018, 01, 05),
+                UserName = $"{user.FirstName} {user.LastName}"
+            };
+
+            _reservationsRepository.GetCountOfPreviousReservation(car.CarId, reservationOption.FromDate)
+                .ReturnsForAnyArgs(1);
+
+            // Act .
+            var result = _target.TryReserve(reservationOption, car, user);
+
+            // Assert .
+            Assert.That(result == 1);
         }
 
         [Test]

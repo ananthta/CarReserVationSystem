@@ -16,6 +16,19 @@ namespace CarReservationSystem.Repositories
             _connectionString = connectionStringProvider.GetDbConnectionString();
         }
 
+        public int GetCountOfPreviousReservation(int carId, DateTime currentFromDate)
+        {
+            const string sql = @" select COUNT(*)
+                                         FROM [dbo].[Reservations] 
+                                  WHERE CarId = @carId
+                                  AND ToDate <= @currentFromDate ";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return connection.Query<int>(sql, new { carId, currentFromDate }).FirstOrDefault();
+            }
+        }
+
         public Reservation GetReservation(int userId, int carId, DateTime fromDate, DateTime toDate)
         {
             const string sql = @" select Id, UserId, CarId,
@@ -49,7 +62,6 @@ namespace CarReservationSystem.Repositories
                 throw;
             }
         }
-
 
         public void UpdateReservation(Reservation reservation, SqlConnection connection, SqlTransaction transaction)
         {

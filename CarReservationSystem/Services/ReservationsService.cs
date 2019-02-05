@@ -24,7 +24,10 @@ namespace CarReservationSystem.Services
 
         public int TryReserve(ReservationOptions reservationOptions, Car car, User user)
         {
-            if (car.Quantity <= 0)
+            var countOfPreviousReservations =
+                _reservationsRepository.GetCountOfPreviousReservation(car.CarId, reservationOptions.FromDate);
+
+            if (car.Quantity <= 0 && (car.Quantity + countOfPreviousReservations) <= 0)
             {
                 Logger.Error("Unable to make reservation as no cars of this model are available.");
                 return 0;
